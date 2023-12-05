@@ -50,6 +50,9 @@ namespace Coldairarrow.Entity.Base
         /// <summary>
         /// 是否系统必须
         /// </summary>
+         
+        [Column("IsSystem", TypeName = "bit")]
+        [Required]
         public Boolean IsSystem { get; set; }
 
         /// <summary>
@@ -65,6 +68,9 @@ namespace Coldairarrow.Entity.Base
         /// <summary>
         /// 删除状态：0=未删除；1＝已删除；
         /// </summary>
+      
+        [Column("Deleted", TypeName = "bit")]
+        [Required]
         public Boolean Deleted { get; set; }
 
     }

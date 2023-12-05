@@ -30,6 +30,9 @@ namespace Coldairarrow.Entity.Base_Manage
         /// <summary>
         /// 否已删除
         /// </summary>
+     
+        [Column("Deleted", TypeName = "bit")]
+        [Required]
         public Boolean Deleted { get; set; }
 
         /// <summary>

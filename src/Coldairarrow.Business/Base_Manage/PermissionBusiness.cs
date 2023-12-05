@@ -57,15 +57,24 @@ namespace Coldairarrow.Business.Base_Manage
 
         public async Task<List<string>> GetUserPermissionValuesAsync(string userId)
         {
-            var actionIds = await GetUserActionIds(userId);
-            return (await _actionBus
-                .GetDataListAsync(new Base_ActionsInputDTO
-                {
-                    types = new ActionType[] { ActionType.权限 },
-                    ActionIds = actionIds
-                }))
-                .Select(x => x.Value)
-                .ToList();
+            try
+            {
+                var actionIds = await GetUserActionIds(userId);
+                return (await _actionBus
+                    .GetDataListAsync(new Base_ActionsInputDTO
+                    {
+                        types = new ActionType[] { ActionType.权限 },
+                        ActionIds = actionIds
+                    }))
+                    .Select(x => x.Value)
+                    .ToList();
+            }
+            catch (System.Exception ex)
+            {
+
+                throw;
+            }
+           
         }
     }
 }

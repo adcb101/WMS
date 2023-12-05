@@ -35,21 +35,29 @@ namespace Coldairarrow.Entity.PB
         /// <summary>
         /// 是否启用托盘管理 0  禁用：1启用
         /// </summary>
+        [Column("IsTray", TypeName = "bit")]
+        [Required]
         public Boolean IsTray { get; set; }
 
         /// <summary>
         /// 事情启用分区管理 0  禁用：1启用
         /// </summary>
+        [Column("IsZone", TypeName = "bit")]
+        [Required]
         public Boolean IsZone { get; set; }
 
         /// <summary>
         /// 启用：0  禁用：1启用
         /// </summary>
+        [Column("Disable", TypeName = "bit")]
+        [Required]
         public Boolean Disable { get; set; }
 
         /// <summary>
         /// 默认
         /// </summary>
+        [Column("IsDefault", TypeName = "bit")]
+        [Required]
         public Boolean IsDefault { get; set; }
 
         /// <summary>
@@ -70,6 +78,8 @@ namespace Coldairarrow.Entity.PB
         /// <summary>
         /// 删除状态：0=未删除；1＝已删除；
         /// </summary>
+        [Column("Deleted", TypeName = "bit")]
+        [Required]
         public Boolean Deleted { get; set; }
 
     }

@@ -380,7 +380,17 @@ namespace Coldairarrow.Business
         /// <returns></returns>
         public virtual IQueryable<T> GetIQueryable()
         {
-            return Db.GetIQueryable<T>();
+            try
+            {
+                var x = Db.GetIQueryable<T>();
+                return x;
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
+            
         }
 
         #endregion

@@ -30,6 +30,9 @@ namespace Coldairarrow.Entity.Base_Manage
         /// <summary>
         /// 否已删除
         /// </summary>
+        
+        [Column("Deleted", TypeName = "bit")]
+        [Required]
         public Boolean Deleted { get; set; }
 
         /// <summary>
@@ -60,6 +63,8 @@ namespace Coldairarrow.Entity.Base_Manage
         /// <summary>
         /// 是否需要权限(仅页面有效)
         /// </summary>
+        [Column("Deleted", TypeName = "bit")]
+        [Required]
         public bool NeedAction { get; set; }
 
         /// <summary>

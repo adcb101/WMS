@@ -34,7 +34,10 @@ namespace Coldairarrow.Entity.Base
         /// <summary>
         /// 是否默认仓库
         /// </summary>
-        public Boolean IsDefault { get; set; }
+        //[Column(TypeName = "bit")]
+        [Column("IsDefault", TypeName = "bit")]
+        [Required]
+        public bool IsDefault { get; set; }
 
         /// <summary>
         /// 创建时间
@@ -49,7 +52,10 @@ namespace Coldairarrow.Entity.Base
         /// <summary>
         /// 删除状态：0=未删除；1＝已删除；
         /// </summary>
-        public Boolean Deleted { get; set; }
+        //[Column(TypeName = "bit")]
+        [Column("Deleted", TypeName = "bit")]
+        [Required]
+        public bool Deleted { get; set; }
 
     }
 }

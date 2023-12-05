@@ -46,6 +46,8 @@ namespace Coldairarrow.Entity.PB
         /// <summary>
         /// 是否有分区
         /// </summary>
+        [Column("IsZone", TypeName = "bit")]
+        [Required]
         public Boolean? IsZone { get; set; }
 
         /// <summary>
@@ -61,6 +63,8 @@ namespace Coldairarrow.Entity.PB
         /// <summary>
         /// 删除状态：0=未删除；1＝已删除；
         /// </summary>
+        [Column("Deleted", TypeName = "bit")]
+        [Required]
         public Boolean Deleted { get; set; }
 
         public List<PB_TrayMaterial> PB_TrayMaterials { get; set; }

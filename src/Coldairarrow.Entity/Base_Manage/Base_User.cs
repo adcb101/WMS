@@ -31,6 +31,12 @@ namespace Coldairarrow.Entity.Base_Manage
         /// <summary>
         /// 否已删除
         /// </summary>
+        //[Column(TypeName = "bit")]
+        //[DisplayFormat(DataFormatString = "{0:0}")]
+       // [Column(TypeName = "int")]
+        [Column("Deleted", TypeName = "bit")]
+        [Required]
+        
         public Boolean Deleted { get; set; }
 
         /// <summary>
@@ -62,6 +68,8 @@ namespace Coldairarrow.Entity.Base_Manage
         /// 所属部门Id
         /// </summary>
         public String DepartmentId { get; set; }
+
+       
     }
 
     public enum Sex

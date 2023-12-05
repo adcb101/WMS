@@ -61,11 +61,15 @@ namespace Coldairarrow.Entity.PB
         /// <summary>
         /// 是否禁用
         /// </summary>
+        [Column("IsForbid", TypeName = "bit")]
+        [Required]
         public Boolean IsForbid { get; set; }
 
         /// <summary>
         /// 是否默认
         /// </summary>
+        [Column("IsDefault", TypeName = "bit")]
+        [Required]
         public Boolean IsDefault { get; set; }
 
         /// <summary>
@@ -96,6 +100,8 @@ namespace Coldairarrow.Entity.PB
         /// <summary>
         /// 删除状态：0=未删除；1＝已删除；
         /// </summary>
+        [Column("Deleted", TypeName = "bit")]
+        [Required]
         public Boolean Deleted { get; set; }
     }
 }

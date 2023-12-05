@@ -90,6 +90,8 @@ namespace Coldairarrow.Entity.TD
         /// <summary>
         /// 删除状态：0=未删除；1＝已删除；
         /// </summary>
+        [Column("Deleted", TypeName = "bit")]
+        [Required]
         public Boolean Deleted { get; set; }
 
     }

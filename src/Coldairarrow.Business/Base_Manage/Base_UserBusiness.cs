@@ -89,20 +89,29 @@ namespace Coldairarrow.Business.Base_Manage
 
         public async Task<Base_UserDTO> GetTheDataAsync(string id)
         {
-            if (id.IsNullOrEmpty())
-                return null;
-            else
+            try
             {
-                PageInput<Base_UsersInputDTO> input = new PageInput<Base_UsersInputDTO>
+                if (id.IsNullOrEmpty())
+                    return null;
+                else
                 {
-                    Search = new Base_UsersInputDTO
+                    PageInput<Base_UsersInputDTO> input = new PageInput<Base_UsersInputDTO>
                     {
-                        all = true,
-                        userId = id
-                    }
-                };
-                return (await GetDataListAsync(input)).Data.FirstOrDefault();
+                        Search = new Base_UsersInputDTO
+                        {
+                            all = true,
+                            userId = id
+                        }
+                    };
+                    return (await GetDataListAsync(input)).Data.FirstOrDefault();
+                }
             }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
+           
         }
 
         [DataAddLog(UserLogType.系统用户管理, "RealName", "用户")]

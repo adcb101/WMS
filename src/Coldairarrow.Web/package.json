@@ -2,16 +2,17 @@
   "name": "vue-antd-pro",
   "version": "2.0.0",
   "private": true,
+  
   "scripts": {
-    "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build",
-    "build:live": "vue-cli-service build --mode live",
-    "build:docker": "vue-cli-service build --mode docker",
-    "build:preview": "vue-cli-service build --mode preview",
-    "lint": "vue-cli-service lint",
-    "lint:nofix": "vue-cli-service lint --no-fix",
-    "test:unit": "vue-cli-service test:unit",
-    "postinstall": "opencollective-postinstall"
+    "serve": "SET NODE_OPTIONS=--openssl-legacy-provider && vue-cli-service serve",
+    "build": "SET NODE_OPTIONS=--openssl-legacy-provider && vue-cli-service build",
+    "build:live": "SET NODE_OPTIONS=--openssl-legacy-provider && vue-cli-service build --mode live",
+    "build:docker": "SET NODE_OPTIONS=--openssl-legacy-provider && vue-cli-service build --mode docker",
+    "build:preview": "SET NODE_OPTIONS=--openssl-legacy-provider && vue-cli-service build --mode preview",
+    "lint": "SET NODE_OPTIONS=--openssl-legacy-provider && vue-cli-service lint",
+    "lint:nofix": "SET NODE_OPTIONS=--openssl-legacy-provider && vue-cli-service lint --no-fix",
+    "test:unit": "SET NODE_OPTIONS=--openssl-legacy-provider && vue-cli-service test:unit",
+    "postinstall": "SET NODE_OPTIONS=--openssl-legacy-provider && opencollective-postinstall"
   },
   "dependencies": {
     "ant-design-vue": "1.5.3",

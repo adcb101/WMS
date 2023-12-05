@@ -10,12 +10,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
+using Effuntions = Microsoft.EntityFrameworkCore.SqlServerDbFunctionsExtensions;
+
 
 namespace Coldairarrow.Business.IT
 {
     public partial class Report_IntroduceBusiness : BaseBusiness<IT_LocalMaterial>, IReport_IntroduceBussiness, ITransientDependency
     {
         readonly IServiceProvider _ServiceProvider;
+        private readonly DbFunctions dbFunctions;
+
         public Report_IntroduceBusiness(IDbAccessor db, IServiceProvider svc)
             : base(db)
         {
@@ -55,70 +59,79 @@ namespace Coldairarrow.Business.IT
 
         public async Task<List<IntroduceHistoryDTO>> GetInStorageList(DateTime date, string storId)
         {
-            var startTime = date.Date.AddDays(-6);
-            var endTime = date.Date.AddDays(1);
+            try
+            {
+                var startTime = date.Date.AddDays(-6);
+                var endTime = date.Date.AddDays(1);
 
-            var qTotal = from i in Db.GetIQueryable<TD_InStorage>()
-                         where i.Status == 1 && i.InStorTime >= startTime && i.InStorTime < endTime
-                         group i by EF.Functions.DateDiffDay(i.InStorTime, endTime) into g
-                         select new
-                         {
-                             Name = "总数",
-                             Day0 = g.Sum(a => g.Key.Equals(0) ? a.TotalNum : 0),
-                             Day1 = g.Sum(a => g.Key.Equals(1) ? a.TotalNum : 0),
-                             Day2 = g.Sum(a => g.Key.Equals(2) ? a.TotalNum : 0),
-                             Day3 = g.Sum(a => g.Key.Equals(3) ? a.TotalNum : 0),
-                             Day4 = g.Sum(a => g.Key.Equals(4) ? a.TotalNum : 0),
-                             Day5 = g.Sum(a => g.Key.Equals(5) ? a.TotalNum : 0),
-                             Day6 = g.Sum(a => g.Key.Equals(6) ? a.TotalNum : 0)
-                         } into gs
-                         group gs by gs.Name into s
-                         select new IntroduceHistoryDTO()
-                         {
-                             Name = s.Key,
-                             Day0 = s.Sum(a => a.Day0),
-                             Day1 = s.Sum(a => a.Day1),
-                             Day2 = s.Sum(a => a.Day2),
-                             Day3 = s.Sum(a => a.Day3),
-                             Day4 = s.Sum(a => a.Day4),
-                             Day5 = s.Sum(a => a.Day5),
-                             Day6 = s.Sum(a => a.Day6),
-                         };
+                var qTotal = from i in Db.GetIQueryable<TD_InStorage>()
+                             where i.Status == 1 && i.InStorTime >= startTime && i.InStorTime < endTime
+                             group i by Effuntions.DateDiffDay(dbFunctions, i.InStorTime, endTime) into g
+                             select new
+                             {
+                                 Name = "总数",
+                                 Day0 = g.Sum(a => g.Key.Equals(0) ? a.TotalNum : 0),
+                                 Day1 = g.Sum(a => g.Key.Equals(1) ? a.TotalNum : 0),
+                                 Day2 = g.Sum(a => g.Key.Equals(2) ? a.TotalNum : 0),
+                                 Day3 = g.Sum(a => g.Key.Equals(3) ? a.TotalNum : 0),
+                                 Day4 = g.Sum(a => g.Key.Equals(4) ? a.TotalNum : 0),
+                                 Day5 = g.Sum(a => g.Key.Equals(5) ? a.TotalNum : 0),
+                                 Day6 = g.Sum(a => g.Key.Equals(6) ? a.TotalNum : 0)
+                             } into gs
+                             group gs by gs.Name into s
+                             select new IntroduceHistoryDTO()
+                             {
+                                 Name = s.Key,
+                                 Day0 = s.Sum(a => a.Day0),
+                                 Day1 = s.Sum(a => a.Day1),
+                                 Day2 = s.Sum(a => a.Day2),
+                                 Day3 = s.Sum(a => a.Day3),
+                                 Day4 = s.Sum(a => a.Day4),
+                                 Day5 = s.Sum(a => a.Day5),
+                                 Day6 = s.Sum(a => a.Day6),
+                             };
 
-            var listTotal = await qTotal.ToListAsync();
-            if (listTotal.Count == 0) listTotal.Add(new IntroduceHistoryDTO() { Name = "总数" });
+                var listTotal = await qTotal.ToListAsync();
+                if (listTotal.Count == 0) listTotal.Add(new IntroduceHistoryDTO() { Name = "总数" });
 
-            var qStorage = from i in Db.GetIQueryable<TD_InStorage>()
-                           where i.Status == 1 && i.InStorTime >= startTime && i.InStorTime < endTime && i.StorId == storId
-                           group i by EF.Functions.DateDiffDay(i.InStorTime, endTime) into g
-                           select new
-                           {
-                               Name = "仓库",
-                               Day0 = g.Sum(a => g.Key.Equals(0) ? a.TotalNum : 0),
-                               Day1 = g.Sum(a => g.Key.Equals(1) ? a.TotalNum : 0),
-                               Day2 = g.Sum(a => g.Key.Equals(2) ? a.TotalNum : 0),
-                               Day3 = g.Sum(a => g.Key.Equals(3) ? a.TotalNum : 0),
-                               Day4 = g.Sum(a => g.Key.Equals(4) ? a.TotalNum : 0),
-                               Day5 = g.Sum(a => g.Key.Equals(5) ? a.TotalNum : 0),
-                               Day6 = g.Sum(a => g.Key.Equals(6) ? a.TotalNum : 0)
-                           } into gs
-                           group gs by gs.Name into s
-                           select new IntroduceHistoryDTO()
-                           {
-                               Name = s.Key,
-                               Day0 = s.Sum(a => a.Day0),
-                               Day1 = s.Sum(a => a.Day1),
-                               Day2 = s.Sum(a => a.Day2),
-                               Day3 = s.Sum(a => a.Day3),
-                               Day4 = s.Sum(a => a.Day4),
-                               Day5 = s.Sum(a => a.Day5),
-                               Day6 = s.Sum(a => a.Day6),
-                           };
-            var listStorge = await qStorage.ToListAsync();
-            if (listStorge.Count == 0) listStorge.Add(new IntroduceHistoryDTO() { Name = "仓库" });
+                var qStorage = from i in Db.GetIQueryable<TD_InStorage>()
+                               where i.Status == 1 && i.InStorTime >= startTime && i.InStorTime < endTime && i.StorId == storId
+                               group i by Effuntions.DateDiffDay(dbFunctions, i.InStorTime, endTime) into g
+                               select new
+                               {
+                                   Name = "仓库",
+                                   Day0 = g.Sum(a => g.Key.Equals(0) ? a.TotalNum : 0),
+                                   Day1 = g.Sum(a => g.Key.Equals(1) ? a.TotalNum : 0),
+                                   Day2 = g.Sum(a => g.Key.Equals(2) ? a.TotalNum : 0),
+                                   Day3 = g.Sum(a => g.Key.Equals(3) ? a.TotalNum : 0),
+                                   Day4 = g.Sum(a => g.Key.Equals(4) ? a.TotalNum : 0),
+                                   Day5 = g.Sum(a => g.Key.Equals(5) ? a.TotalNum : 0),
+                                   Day6 = g.Sum(a => g.Key.Equals(6) ? a.TotalNum : 0)
+                               } into gs
+                               group gs by gs.Name into s
+                               select new IntroduceHistoryDTO()
+                               {
+                                   Name = s.Key,
+                                   Day0 = s.Sum(a => a.Day0),
+                                   Day1 = s.Sum(a => a.Day1),
+                                   Day2 = s.Sum(a => a.Day2),
+                                   Day3 = s.Sum(a => a.Day3),
+                                   Day4 = s.Sum(a => a.Day4),
+                                   Day5 = s.Sum(a => a.Day5),
+                                   Day6 = s.Sum(a => a.Day6),
+                               };
+                var listStorge = await qStorage.ToListAsync();
+                if (listStorge.Count == 0) listStorge.Add(new IntroduceHistoryDTO() { Name = "仓库" });
 
-            listTotal.AddRange(listStorge);
-            return listTotal;
+                listTotal.AddRange(listStorge);
+                return listTotal;
+            }
+            catch (Exception EX)
+            {
+
+                throw;
+            }
+            
             //            var sql = @"
             //SELECT
             //	'总数' as `Name`,
@@ -154,7 +167,7 @@ namespace Coldairarrow.Business.IT
             var endTime = date.Date.AddDays(1);
             var qTotal = from i in Db.GetIQueryable<TD_OutStorage>()
                          where i.Status == 1 && i.OutTime >= startTime && i.OutTime < endTime
-                         group i by EF.Functions.DateDiffDay(i.OutTime, endTime) into g
+                         group i by Effuntions.DateDiffDay(dbFunctions, startTime, endTime) into g
                          select new
                          {
                              Name = "总数",
@@ -180,11 +193,11 @@ namespace Coldairarrow.Business.IT
                          };
 
             var listTotal = await qTotal.ToListAsync();
-            if (listTotal.Count == 0) listTotal.Add(new IntroduceHistoryDTO() { Name = "总数" });
+            if (listTotal.Count() == 0) listTotal.Add(new IntroduceHistoryDTO() { Name = "总数" });
 
             var qStorage = from i in Db.GetIQueryable<TD_OutStorage>()
                            where i.Status == 1 && i.OutTime >= startTime && i.OutTime < endTime && i.StorageId == storId
-                           group i by EF.Functions.DateDiffDay(i.OutTime, endTime) into g
+                           group i by Effuntions.DateDiffDay(dbFunctions, startTime, endTime) into g
                            select new
                            {
                                Name = "仓库",
@@ -209,7 +222,7 @@ namespace Coldairarrow.Business.IT
                                Day6 = s.Sum(a => a.Day6),
                            };
             var listStorge = await qStorage.ToListAsync();
-            if (listStorge.Count == 0) listStorge.Add(new IntroduceHistoryDTO() { Name = "仓库" });
+            if (listStorge.Count() == 0) listStorge.Add(new IntroduceHistoryDTO() { Name = "仓库" });
 
             listTotal.AddRange(listStorge);
             return listTotal;
